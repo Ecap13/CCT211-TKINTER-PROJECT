@@ -665,7 +665,7 @@ class StudentWindow(Frame):
     def get_data(self):
         s = self.entry.get()
         self.update_data(s)
-        self.label3.config(text="Marks sucessfully updated.")
+        self.label3.config(text="Marks successfully updated.")
 
 
 App().mainloop()

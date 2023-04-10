@@ -630,6 +630,8 @@ class StudentWindow(Frame):
         self.label3 = Label(self, text=" ")
         self.label3.place(x=350, y=350)
 
+        self.errorflag = False
+
     # Method that checks the input and enter the corresponding values from the input
     def update_data(self, s):
         grades = ["A+", "A", "A-", "B+", "B", "B-", "C+", "C", "C-", "D+",
@@ -638,33 +640,48 @@ class StudentWindow(Frame):
                  (70, 72), (67, 69), (63, 66), (60, 62), (57, 59),
                  (53, 56), (50, 52), (0, 49)]
         GPAs = [4.0, 4.0, 3.7, 3.3, 3.0, 2.7, 2.3, 2.0, 1.7, 1.3, 1.0, 0.7, 0.0]
-        if s.isdigit() or isinstance(s, str) or s.replace(".", "").isnumeric():
-            if s in grades:
-                n = 0
-                while n < len(grades):
-                    if grades[n] == s:
-                        t = [grades[n], marks[n][0], GPAs[n]]
-                        dg.edit_student(t)
-                    n += 1
-            elif "." not in s and int(s) in range(0, 101):
-                n = 0
-                while n < len(marks):
-                    if int(s) in range(marks[n][0], marks[n][1]):
-                        t = [grades[n], s, GPAs[n]]
-                        dg.edit_student(t)
-                    n += 1
-            elif float(s) in GPAs:
-                n = 0
-                while n < len(GPAs):
-                    if GPAs[n] == float(s):
-                        t = [grades[n], marks[n][0], s]
-                        dg.edit_student(t)
-                    n += 1
+        self.errorflag = False
+        try:
+            if s.isdigit() or isinstance(s, str) or s.replace(".", "").isnumeric():
+                if s in grades:
+                    n = 0
+                    while n < len(grades):
+                        if grades[n] == s:
+                            t = [grades[n], marks[n][0], GPAs[n]]
+                            dg.edit_student(t)
+                        n += 1
+                    return
+                elif "." not in s and int(s) in range(0, 101):
+                    n = 0
+                    while n < len(marks):
+                        if int(s) in range(marks[n][0], marks[n][1]):
+                            t = [grades[n], s, GPAs[n]]
+                            dg.edit_student(t)
+                        n += 1
+                    return
+                elif float(s) in GPAs:
+                    n = 0
+                    while n < len(GPAs):
+                        if GPAs[n] == float(s):
+                            t = [grades[n], marks[n][0], s]
+                            dg.edit_student(t)
+                        n += 1
+                    return
+            # If none of the if statements are entered, the input must be invalid
+            self.errorflag = True
+        # If there is a ValueError, set an error flag
+        except ValueError:
+            self.errorflag = True
 
-    # Method to get the data from the user. Calls the update_data function
+
+# Method to get the data from the user. Calls the update_data function
     def get_data(self):
+        # Provide a message for the user if error flag is true
         s = self.entry.get()
         self.update_data(s)
+        if self.errorflag:
+            self.label3.config(text="Invalid Input: Please enter a grade, mark or GPA")
+            return
         self.label3.config(text="Marks successfully updated.")
 
 
